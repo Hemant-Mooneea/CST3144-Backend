@@ -53,4 +53,16 @@ export class MongoDatabase
             console.error("Error getting lessons:", error);
         }
     }
+    async addOrder(order)
+    {
+        try
+        {
+            const result = await this.ordersCollection.insertOne(order);
+            return result;
+        }
+        catch(error)
+        {
+            console.error("Error adding order:", error);
+        }
+    }
 }
