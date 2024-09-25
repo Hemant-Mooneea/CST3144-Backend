@@ -18,9 +18,22 @@ app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
-app.get("/lessons", (req,res) => {
-    //TODO - Get all lessons from the lessons collection
-})
+app.get("/lessons", async (req, res) => {
+    try 
+    {   
+        const lessons = await MongoDB.getLessons();
+        if(lessons.length === 0)
+        {
+            res.status(404).json({ message: "No lessons found." });
+        } 
+        res.status(200).json(lessons);
+    } 
+    catch (error) 
+    {
+        console.error("Error fetching lessons:", error);
+        res.status(500).json({ message: "Failed to fetch lessons." });
+    }
+});
 
 app.post("/order", (req,res) => {
     //TODO - Create a new order in the orders collection

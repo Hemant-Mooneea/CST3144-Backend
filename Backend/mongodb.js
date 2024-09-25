@@ -31,11 +31,26 @@ export class MongoDatabase
         {
             // Awaiting connection to cloud DB
             await this.client.connect();
-            console.log("Connected to MongoDB server");;
-        } 
+            console.log("Connected to MongoDB server");
+            this.database = this.client.db("Private_Tuition");
+            this.lessonsCollection = this.database.collection("Lessons");
+            this.ordersCollection = this.database.collection("Orders");
+        }       
         catch (error) 
         {
            console.error("Error connecting to MongoDB server:", error);
+        }
+    }
+    async getLessons()
+    {
+        try
+        {
+            const lessons = await this.lessonsCollection.find({}).toArray();
+            return lessons;
+        }
+        catch(error)
+        {
+            console.error("Error getting lessons:", error);
         }
     }
 }
