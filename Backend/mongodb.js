@@ -41,7 +41,7 @@ export class MongoDatabase
            console.error("Error connecting to MongoDB server:", error);
         }
     }
-    async getLessons()
+    async getAllLessons()
     {
         try
         {
@@ -63,6 +63,21 @@ export class MongoDatabase
         catch(error)
         {
             console.error("Error adding order:", error);
+        }
+    }
+    async updateLessonSpace(lessonID, newSpace) 
+    {
+        try 
+        {
+            await this.lessonsCollection.updateOne
+            (
+                { _id: new ObjectId(lessonID) }, 
+                { $set: {space:newSpace}}  
+            );
+        }
+        catch (error) 
+        {
+            console.error("Error updating lesson:", error);
         }
     }
 }
