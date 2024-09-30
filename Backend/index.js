@@ -36,7 +36,17 @@ app.get("/lessons", async (req, res) => {
 });
 
 app.post("/order", (req,res) => {
-    //TODO - Create a new order in the orders collection
+    try
+    {
+        const order = req.body;
+        MongoDB.addOrder(order);
+        res.status(201).json("Order created successfully.");
+    }
+    catch(error)
+    {
+        console.error("Error creating order:", error);
+        res.status(500).json({ message: "Failed to create order." });
+    }
 })
 
 app.get("/search", (req,res)=> {
