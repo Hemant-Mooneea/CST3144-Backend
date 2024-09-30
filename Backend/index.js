@@ -14,43 +14,62 @@ app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get("/", (req, res) => 
+{
     res.send("Hello World!");
 });
 
-app.get("/lessons", async (req, res) => {
+app.get("/lessons", async (req, res) => 
+{
     try 
     {   
-        const lessons = await MongoDB.getLessons();
+        const lessons = await MongoDB.getAllLessons();
         if(lessons.length === 0)
         {
-            res.status(404).json({ message: "No lessons found." });
+            res.status(404).json({message:"No lessons found." });
         } 
         res.status(200).json(lessons);
     } 
     catch (error) 
     {
         console.error("Error fetching lessons:", error);
-        res.status(500).json({ message: "Failed to fetch lessons." });
+        res.status(500).json({message:"Failed to fetch lessons." });
     }
 });
 
-app.post("/order", (req,res) => {
+app.post("/order", (req,res) => 
+{
     try
     {
         const order = req.body;
         MongoDB.addOrder(order);
-        res.status(201).json("Order created successfully.");
+        res.status(201).json({message:"Order created successfully."});
     }
     catch(error)
     {
         console.error("Error creating order:", error);
-        res.status(500).json({ message: "Failed to create order." });
+        res.status(500).json({message:"Failed to create order." });
     }
-})
+});
 
-app.get("/search", (req,res)=> {
-    //TODO - Search for a lesson in the lessons collection
-})
+app.put("/lessons/:id", async(req,res) =>
+{
+    try     
+    {
+        const lessonID = req.params.id;
+        const newSpaces = req.body.space;
+        await MongoDB.updateLessonSpace(lessonID, newSpaces);
+        res.status(200).json({message:"Updated number of spaces"});   
+    } 
+    catch (error) 
+    {
+        res.status(500).json({message:"Failed to update lesson spaces"})
+    }
+});
 
-//! Ask what to use PUT route for(other than increase/decrease seat taken)
+//TODO - Search for a lesson in the lessons collection
+app.get("/search", (req,res) => 
+{
+    console.log(req.body.search);
+});
+
