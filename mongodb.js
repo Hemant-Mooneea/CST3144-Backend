@@ -85,7 +85,11 @@ export class MongoDatabase
                     // Case-insensitive search for topic and location
                     { topic: { $regex: searchQuery, $options: 'i' } },
                     { location: { $regex: searchQuery, $options: 'i' } },
-                    // Use $expr and $regexMatch to handle numbers as strings
+                    /*
+                        expr allows for aggregated expressions to be used in the query
+                        regexMatch allows for regex expressions to be used in the query
+                        toString converts the price and space fields to strings
+                    */
                     {
                         '$expr': {
                             '$regexMatch': {
