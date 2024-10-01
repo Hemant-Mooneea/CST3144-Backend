@@ -14,10 +14,7 @@ app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 app.use(express.json());
 
-app.get("/", (req, res) => 
-{
-    res.send("Hello World!");
-});
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.get("/lessons", async (req, res) => 
 {
