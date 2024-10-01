@@ -67,7 +67,6 @@ app.put("/lessons/:id", async(req,res) =>
     }
 });
 
-//TODO - Search for a lesson in the lessons collection
 app.get("/search", async(req,res) => 
 {   
     try 
