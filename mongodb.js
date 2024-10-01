@@ -21,15 +21,12 @@ export class MongoDatabase
                 deprecationErrors: true,
             }
         })
-        // Connecting to the Cloud Database
         this.connect();
     }
-    // Method to connect to Cloud Database 
     async connect() 
     {
         try 
         {
-            // Awaiting connection to cloud DB
             await this.client.connect();
             console.log("Connected to MongoDB server");
             this.database = this.client.db("Private_Tuition");
@@ -79,5 +76,9 @@ export class MongoDatabase
         {
             console.error("Error updating lesson:", error);
         }
+    }
+    async searchTuitions(searchQuery)
+    {
+
     }
 }
