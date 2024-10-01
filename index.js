@@ -25,7 +25,10 @@ app.get("/lessons", async (req, res) =>
         {
             res.status(404).json({message:"No lessons found." });
         } 
-        res.status(200).json(lessons);
+        else
+        {
+            res.status(200).json(lessons);
+        }
     } 
     catch (error) 
     {
@@ -34,12 +37,12 @@ app.get("/lessons", async (req, res) =>
     }
 });
 
-app.post("/order", (req,res) => 
+app.post("/order", async (req,res) => 
 {
     try
     {
         const order = req.body;
-        MongoDB.addOrder(order);
+        await MongoDB.addOrder(order);
         res.status(201).json({message:"Order created successfully."});
     }
     catch(error)
