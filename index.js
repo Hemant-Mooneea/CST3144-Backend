@@ -68,8 +68,26 @@ app.put("/lessons/:id", async(req,res) =>
 });
 
 //TODO - Search for a lesson in the lessons collection
-app.get("/search", (req,res) => 
-{
-    console.log(req.body.search);
+app.get("/search", async(req,res) => 
+{   
+    try 
+    {
+        const searchQuery = req.query.q;
+        const results = await MongoDB.searchTuitions(searchQuery);
+        if(results.length === 0)
+        {
+            res.status(404).json({message:"No lessons found." });
+        }
+        else
+        {
+            res.status(200).json(results);
+        }
+        
+    } 
+    catch (error) 
+    {
+        console.error("Error searching for lessons:", error);
+        res.status(500).json({message:"Failed to search for lessons." });
+    }
 });
 

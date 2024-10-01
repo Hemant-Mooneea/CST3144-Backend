@@ -79,6 +79,36 @@ export class MongoDatabase
     }
     async searchTuitions(searchQuery)
     {
-
+        try {
+            const results = await this.lessonsCollection.find({
+                $or: [
+                    // Case-insensitive search for topic and location
+                    { topic: { $regex: searchQuery, $options: 'i' } },
+                    { location: { $regex: searchQuery, $options: 'i' } },
+                    // Use $expr and $regexMatch to handle numbers as strings
+                    {
+                        '$expr': {
+                            '$regexMatch': {
+                                'input': { '$toString': "$price" },
+                                'regex': searchQuery
+                            }
+                        }
+                    },
+                    {
+                        '$expr': {
+                            '$regexMatch': {
+                                'input': { '$toString': "$space" },
+                                'regex': searchQuery
+                            }
+                        }
+                    }
+                ]
+            }).toArray();
+            return results;
+        }
+        catch (error)
+        {
+            console.error("Error performing search:", error);
+        }
     }
 }
