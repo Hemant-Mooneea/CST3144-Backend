@@ -1,10 +1,13 @@
 import express from "express";
 import path from "path";
 import { MongoDatabase } from "./mongodb.js";
+import cors from "cors";
 
 const MongoDB = new MongoDatabase();
 
 const app = express();
+
+app.use(cors());
 
 const PORT = 3000;
 
