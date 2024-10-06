@@ -60,8 +60,8 @@ app.put("/lessons/:id", async(req,res) =>
     try     
     {
         const lessonID = req.params.id;
-        const newSpaces = req.body.space;
-        await MongoDB.updateLessonSpace(lessonID, newSpaces);
+        const newLesson = req.body.lesson;
+        await MongoDB.updateLesson(lessonID, newLesson);
         res.status(200).json({message:"Updated number of spaces"});   
     } 
     catch (error) 

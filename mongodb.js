@@ -62,14 +62,14 @@ export class MongoDatabase
             console.error("Error adding order:", error);
         }
     }
-    async updateLessonSpace(lessonID, newSpace) 
+    async updateLesson(lessonID, newLesson) 
     {
         try 
         {
-            await this.lessonsCollection.updateOne
+            await this.lessonsCollection.replaceOne
             (
                 { _id: new ObjectId(lessonID) }, 
-                { $set: {space:newSpace}}  
+                newLesson  
             );
         }
         catch (error) 
