@@ -13,6 +13,9 @@ export class MongoDatabase
         // URI Connection link
         const connectionURI = `mongodb+srv://${encodedUsername}:${encodedPassword}@${server}`
         // Creating a MongoClient
+        // serverApi is used to specify the version of the MongoDB server to connect to
+        // strict is set to false to allow for the use of deprecated features
+        // deprecationErrors is set to true to allow for the display of deprecation warnings
         this.client = new MongoClient(connectionURI, {
             serverApi:
             {
@@ -21,15 +24,18 @@ export class MongoDatabase
                 deprecationErrors: true,
             }
         })
+        // Initialising the database and collections
         this.connect();
     }
     async connect() 
-    {
+    {   
         try 
-        {
+        {   // Connecting to the MongoDB server
             await this.client.connect();
             console.log("Connected to MongoDB server");
+            // Accessing the Private_Tuition database
             this.database = this.client.db("Private_Tuition");
+            // Accessing the Lessons and Orders collections
             this.lessonsCollection = this.database.collection("Lessons");
             this.ordersCollection = this.database.collection("Orders");
         }       
@@ -38,10 +44,12 @@ export class MongoDatabase
            console.error("Error connecting to MongoDB server:", error);
         }
     }
+    // Method to get all lessons from the database
     async getAllLessons()
     {
         try
         {
+            // Retrieving all lessons in the Lessons collection and converting them to an array
             const lessons = await this.lessonsCollection.find({}).toArray();
             return lessons;
         }
@@ -50,10 +58,15 @@ export class MongoDatabase
             console.error("Error getting lessons:", error);
         }
     }
+    /*
+        Method to add an order to the Orders collection
+        @params order: The order to be added to the Orders collection
+    */
     async addOrder(order)
     {
         try
         {
+            // Inserting the order into the Orders collection
             const result = await this.ordersCollection.insertOne(order);
             return result;
         }
@@ -62,6 +75,11 @@ export class MongoDatabase
             console.error("Error adding order:", error);
         }
     }
+    /*
+        Method to update any attributes of a specific lesson
+        @params lessonID: The ID of the lesson to be updated
+        @params newLesson: The new lesson object to replace the existing lesson
+    */
     async updateLesson(lessonID, newLesson) 
     {
         try 
@@ -77,10 +95,16 @@ export class MongoDatabase
             console.error("Error updating lesson:", error);
         }
     }
+    /* 
+        Method to search for lessons based on a search query
+        @params searchQuery: The search query to be used to search for lessons
+    */
     async searchTuitions(searchQuery)
     {
         try {
+            // Searching for lessons based on the search query
             const results = await this.lessonsCollection.find({
+                // Using the $or operator to search for lessons if it matches any of the search criteria
                 $or: [
                     // Case-insensitive search for topic and location
                     { topic: { $regex: searchQuery, $options: 'i' } },
@@ -88,7 +112,7 @@ export class MongoDatabase
                     /*
                         expr allows for aggregated expressions to be used in the query
                         regexMatch allows for regex expressions to be used in the query
-                        toString converts the price and space fields to strings
+                        toString converts the price and space fields to strings when fetching them
                     */
                     {
                         '$expr': {
